@@ -370,7 +370,14 @@ public class GridRecordWriter<S extends Shape> implements ShapeRecordWriter<S> {
   protected OutputStream getIntermediateCellStream(int cellIndex) throws IOException {
     if (intermediateCellStreams[cellIndex] == null) {
       // For grid file, we write directly to the final file
-      intermediateCellPath[cellIndex] = getFinalCellPath(cellIndex);
+  
+	Path finalfinalCellPath = getFinalCellPath(cellIndex);
+        String modifiedPath = finalfinalCellPath.toUri().toString();        
+        Rectangle cellMbr = cellsMbr[cellIndex];
+        modifiedPath += "_mbr_centre_" + (int)((cellMbr.x1 + cellMbr.getWidth()/2)*100/1000000) + "_" + (int)((cellMbr.y1 + cellMbr.getHeight()/2)*100/1000000) + "_";
+        finalfinalCellPath = new Path(modifiedPath);
+
+      intermediateCellPath[cellIndex] = finalfinalCellPath;
       intermediateCellStreams[cellIndex] = createFinalCellStream(intermediateCellPath[cellIndex]);
     }
     return intermediateCellStreams[cellIndex];
